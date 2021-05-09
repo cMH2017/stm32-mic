@@ -103,9 +103,11 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     printf("sleep...\r\n");
-    HAL_NVIC_DisableIRQ(EXTI3_IRQn);
+    HAL_SuspendTick();
+    // HAL_NVIC_DisableIRQ(EXTI3_IRQn);
     HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFE);
     printf("wakeup!!!\r\n");
+    HAL_ResumeTick();
     HAL_NVIC_EnableIRQ(EXTI3_IRQn);
     Toggle_LED_G();
     printf("The sysclk freq = %dHZ\r\n", HAL_RCC_GetSysClockFreq());
