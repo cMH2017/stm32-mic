@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -60,6 +61,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     Toggle_LED_R();
     printf("\r\nEXIT!\r\n");
 }
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    static int tim6_cnt = 0;
+    if(htim->Instance == TIM6)
+    {
+        // 用示波器测试过就是精准的1S
+        Toggle_LED_R();
+        printf("tim6_cnt = %d\r\n", ++tim6_cnt);
+    }
+    else if(htim->Instance == TIM2)
+    {
+        Toggle_LED_G();
+        // printf("tim2_cnt = %d\r\n", ++tim6_cnt);
+    }
+    
+}
 /* USER CODE END 0 */
 
 /**
@@ -91,8 +109,13 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+  MX_TIM6_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1);
+  // HAL_TIM_Base_Start(&htim6);
+  HAL_TIM_Base_Start_IT(&htim6);
+  // HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -102,14 +125,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    printf("sleep...\r\n");
-    HAL_SuspendTick();
-    // HAL_NVIC_DisableIRQ(EXTI3_IRQn);
-    HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFE);
-    printf("wakeup!!!\r\n");
-    HAL_ResumeTick();
-    HAL_NVIC_EnableIRQ(EXTI3_IRQn);
-    Toggle_LED_G();
+    // Toggle_LED_G();
     printf("The sysclk freq = %dHZ\r\n", HAL_RCC_GetSysClockFreq());
     printf("The hclk(CPU GPIO) freq = %dHZ\r\n", HAL_RCC_GetHCLKFreq());
     printf("The pclk1 freq = %dHZ\r\n", HAL_RCC_GetPCLK1Freq());
