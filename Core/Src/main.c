@@ -55,7 +55,11 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    Toggle_LED_R();
+    printf("\r\nEXIT!\r\n");
+}
 /* USER CODE END 0 */
 
 /**

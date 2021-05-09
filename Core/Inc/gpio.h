@@ -32,7 +32,9 @@ extern "C" {
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */
+#define Toggle_LED_R()  HAL_GPIO_TogglePin(LED_R_GPIO_Port, LED_R_Pin)
 #define Toggle_LED_G()  HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin)
+#define Toggle_LED_B()  HAL_GPIO_TogglePin(LED_B_GPIO_Port, LED_B_Pin)
 
 /* USER CODE END Private defines */
 
